@@ -7,4 +7,5 @@ import com.bfl.kernel.entity.Account;
  */
 public interface AccountMapper {
     public Account getAccount();
+    public int setAccountMarkToZero(int id);
 }

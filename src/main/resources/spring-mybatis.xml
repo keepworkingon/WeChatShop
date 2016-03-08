@@ -86,7 +86,7 @@
             <tx:method name="del*" propagation="REQUIRED"/>
             <tx:method name="recover*" propagation="REQUIRED"/>
             <tx:method name="sync*" propagation="REQUIRED"/>
-            <tx:method name="*" read-only="true"/>
+            <tx:method name="*" read-only="false"/>
         </tx:attributes>
     </tx:advice>
 

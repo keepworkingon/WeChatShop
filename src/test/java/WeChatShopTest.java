@@ -34,8 +34,15 @@ public class WeChatShopTest {
     }
 
     @Test
-    public void test2(){
+    public void testGetAccount(){
         Account account = accountService.getAccount();
         System.out.println("账号是:" + account.getAcc_num()+"," + "密码是:" + account.getAcc_psd());
     }
+
+    @Test
+    public void testSetAccountMarkToZero(){
+        int res = accountService.setAccountMarkToZero(1);
+        System.out.println("成功更新mark的行数为:" + res);
+    }
+
 }
