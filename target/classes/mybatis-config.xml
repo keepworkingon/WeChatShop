@@ -18,10 +18,12 @@
 
     <typeAliases>
         <typeAlias alias="User" type="com.bfl.kernel.entity.User" />
+        <typeAlias alias="Account" type="com.bfl.kernel.entity.Account" />
     </typeAliases>
 
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/AccountMapper.xml"/>
         <!--<mapper class="com.bfl.kernel.dao.UserMapper"/>-->
         <!--<mapper url="/Users/apple/IdeaProjects/WeChatShop/src/main/java/com/bfl/kernel/mapper/UserMapper.xml"/>-->
         <!--<package name="com.bfl.kernel.dao"/>-->

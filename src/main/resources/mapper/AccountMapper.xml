@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bfl.kernel.dao.AccountMapper" >
+    <resultMap id = "Account" type="com.bfl.kernel.entity.Account">
+        <id column="id" property="id"/>
+        <result column="acc_num" property="acc_num"/>
+        <result column="acc_psd" property="acc_psd"/>
+        <result column="mark" property="mark"/>
+    </resultMap>
+
+
+    <select id="getAccount"  resultMap="Account">
+        select * from account limit 0,1;
+    </select>
+
+</mapper>
