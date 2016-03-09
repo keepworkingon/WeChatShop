@@ -2,10 +2,7 @@ package com.bfl.web.controller;
 
 import com.bfl.kernel.entity.XMLContent;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by apple on 16/3/9.
@@ -24,5 +21,12 @@ public class XmlContentController {
         xmlContent.setFromUserName("testFromName");
         xmlContent.setMsgType("text");
         return xmlContent;
+    }
+
+    @RequestMapping(value = "/xmlPostTest",method = RequestMethod.POST)
+    public @ResponseBody String getXmlPostTestRes(@RequestBody String requestBody){
+        //测试成果,可以打印出利用post传过来的xml数据,接下来将String转化为回复的xml就可以了
+        System.out.println(requestBody);
+        return "ok!";
     }
 }
