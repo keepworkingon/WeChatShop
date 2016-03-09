@@ -13,4 +13,8 @@
         select * from account limit 0,1;
     </select>
 
+    <update id="setAccountMarkToZero" parameterType="Integer">
+        update account set mark = 1 where id = #{id};
+    </update>
+
 </mapper>

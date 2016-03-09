@@ -1,8 +1,11 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" build-on-make="true" name="WeChatShop:war exploded">
+  <artifact type="exploded-war" name="WeChatShop:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/WeChatShop_war_exploded</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="WeChatShop" />
+        </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
           <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
@@ -34,10 +37,8 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.2.8.RELEASE" />
           <element id="library" level="project" name="Maven: org.terracotta:offheap-store:2.1.0" />
         </element>
-        <element id="directory" name="classes">
-          <element id="module-output" name="WeChatShop" />
-        </element>
       </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/webapp" />
     </root>
   </artifact>
 </component>
