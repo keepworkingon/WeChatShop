@@ -13,8 +13,12 @@ public class AccountMapperImpl extends SqlSessionDaoSupport implements AccountMa
     public Account getAccount() {
 
             Account accountFromDB =  getSqlSession().selectOne("getAccount");
-            if(accountFromDB == null){
-                accountFromDB = new Account();
+            if(accountFromDB != null){
+                int id = accountFromDB.getId();
+                int updateRowNum = setAccountMarkToZero(id);
+                if(updateRowNum < 1){
+                    logger.error("帐号消费之后,mark位置零出现错位,请及时修复!");
+                }
             }
             return accountFromDB;
 

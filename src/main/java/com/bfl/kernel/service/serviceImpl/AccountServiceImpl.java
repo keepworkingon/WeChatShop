@@ -21,10 +21,14 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public Account getAccount() {
         Account accountFromDB =  accountMapper.getAccount();
-        logger.info("帐号 acc_num={} 已被消费",accountFromDB.getAcc_num());
+        if (accountFromDB != null) {
+            logger.info("帐号 acc_num={} 已被消费", accountFromDB.getAcc_num());
+        }
         return accountFromDB;
     }
 
+    
+    /*
     @Override
     public int setAccountMarkToZero(int id) {
         int updateRowNum = accountMapper.setAccountMarkToZero(id);
@@ -33,4 +37,5 @@ public class AccountServiceImpl implements AccountService{
         }
         return updateRowNum;
     }
+    */
 }

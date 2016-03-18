@@ -10,7 +10,7 @@
 
 
     <select id="getAccount"  resultMap="Account">
-        select * from account limit 0,1;
+        select * from account  where mark = 1 order by id limit 0,1;
     </select>
 
     <update id="setAccountMarkToZero" parameterType="Integer">
