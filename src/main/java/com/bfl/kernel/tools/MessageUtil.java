@@ -5,6 +5,14 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -15,8 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.thoughtworks.xstream.*;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 /**
  * Created by shidd on 2016/3/15.
@@ -208,4 +219,31 @@ public class MessageUtil {
         }
         return new byte[] {};
     }
+    /*
+        发送post请求接口,目前支持发送post参数,后续扩展到支持发送xml参数
+     */
+
+    public static JSONObject sendPost(String url, JSONObject json){
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(url);
+        JSONObject response = null;
+        try {
+            StringEntity s = new StringEntity(json.toString());
+            s.setContentEncoding("UTF-8");
+            s.setContentType("application/json");
+            post.setEntity(s);
+
+            HttpResponse res = client.execute(post);
+            if(res.getStatusLine().getStatusCode() == HttpStatus.OK.value()){
+                HttpEntity entity = res.getEntity();
+                String charset = EntityUtils.getContentCharSet(entity);
+                response = new JSONObject(new JSONTokener(new InputStreamReader(entity.getContent(),charset)));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return response;
+
+    }
+
 }
