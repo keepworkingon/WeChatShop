@@ -5,13 +5,13 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.Args;
 import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -149,7 +149,6 @@ public class MessageUtil {
 
         // 释放资源
         inputStream.close();
-        inputStream = null;
 
         return map;
     }
@@ -236,14 +235,28 @@ public class MessageUtil {
             HttpResponse res = client.execute(post);
             if(res.getStatusLine().getStatusCode() == HttpStatus.OK.value()){
                 HttpEntity entity = res.getEntity();
-                String charset = EntityUtils.getContentCharSet(entity);
+                String charset = getContentCharSet(entity);
                 response = new JSONObject(new JSONTokener(new InputStreamReader(entity.getContent(),charset)));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return response;
+    }
 
+    public static String getContentCharSet(final HttpEntity entity) throws ParseException {
+        Args.notNull(entity, "Entity");
+        String charset = null;
+        if (entity.getContentType() != null) {
+            final HeaderElement values[] = entity.getContentType().getElements();
+            if (values.length > 0) {
+                final NameValuePair param = values[0].getParameterByName("encoding");
+                if (param != null) {
+                    charset = param.getValue();
+                }
+            }
+        }
+        return charset;
     }
 
 }

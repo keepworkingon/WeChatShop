@@ -1,10 +1,12 @@
 package com.bfl.web.controller;
 
-import com.bfl.kernel.entity.ShareData;
+import com.bfl.kernel.entity.Urls;
 import com.bfl.kernel.entity.msg.TextMessage;
 import com.bfl.kernel.tools.MessageUtil;
+import com.bfl.kernel.tools.TokenUtil;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -161,13 +163,20 @@ public class WeChatShopController {
                 }
                 // 订单支付成功
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_MERCHANT_ORDER)) {
-                    respContent = "您的支付已经完成！";
+                    String url = TokenUtil.getInstance().addToken(Urls.getOrderDetailsById);
+                    JSONObject jsonObject = new JSONObject("{\"order_id\":\"" + requestMap.get("OrderId") + "\"}");
+                    jsonObject = MessageUtil.sendPost(url,jsonObject);
+                    logger.info("订单详情：" + jsonObject);
+                    //未完待续：至此已经获得这笔订单的产品信息，根据产品信息到数据库选择不同面值的卡密，然后进行分发
+                    respContent = "卡号：123456\n密码：123456";
+                    //这个类型的推送貌似不能直接回去，需要自己调用api给用户发送消息
                 }
             }
             // 设置文本消息的内容
             textMessage.setContent(respContent);
             // 将文本消息对象转换成xml
             respXml = MessageUtil.textMessageToXml(textMessage);
+            logger.info("回复的XML消息：" + respXml);
             PrintWriter out = response.getWriter();
             out.print(respXml);
             out.close();
