@@ -227,8 +227,8 @@ public class MessageUtil {
         HttpPost post = new HttpPost(url);
         JSONObject response = null;
         try {
-            StringEntity s = new StringEntity(json.toString());
-            s.setContentEncoding("UTF-8");
+            StringEntity s = new StringEntity(json.toString(), "utf-8");
+//            s.setContentEncoding("UTF-8");
             s.setContentType("application/json");
             post.setEntity(s);
 

@@ -1,6 +1,7 @@
 package com.bfl.web.controller;
 
-import com.bfl.kernel.entity.Urls;
+import com.bfl.kernel.data.Jsons;
+import com.bfl.kernel.data.Urls;
 import com.bfl.kernel.entity.msg.TextMessage;
 import com.bfl.kernel.tools.MessageUtil;
 import com.bfl.kernel.tools.TokenUtil;
@@ -94,8 +95,8 @@ public class WeChatShopController {
         // 默认返回的文本消息内容
         String respContent = "未知的消息类型！";
         try{
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
+//            request.setCharacterEncoding("UTF-8");
+//            response.setCharacterEncoding("UTF-8");
             response.setContentType("application/text; charset=utf-8");
             Map<String, String> requestMap = MessageUtil.parseXml(request);
 
@@ -106,12 +107,12 @@ public class WeChatShopController {
             // 消息类型
             String msgType = requestMap.get("MsgType");
 
-            // 回复文本消息
-            TextMessage textMessage = new TextMessage();
-            textMessage.setToUserName(fromUserName);
-            textMessage.setFromUserName(toUserName);
-            textMessage.setCreateTime(new Date().getTime());
-            textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
+//            // 回复文本消息
+//            TextMessage textMessage = new TextMessage();
+//            textMessage.setToUserName(fromUserName);
+//            textMessage.setFromUserName(toUserName);
+//            textMessage.setCreateTime(new Date().getTime());
+//            textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
 
             // 文本消息
             if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
@@ -163,23 +164,29 @@ public class WeChatShopController {
                 }
                 // 订单支付成功
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_MERCHANT_ORDER)) {
+                    //根据订单id获取订单详情信息
                     String url = TokenUtil.getInstance().addToken(Urls.getOrderDetailsById);
-                    JSONObject jsonObject = new JSONObject("{\"order_id\":\"" + requestMap.get("OrderId") + "\"}");
+                    JSONObject jsonObject = new JSONObject(String.format(Jsons.orderId, requestMap.get("OrderId")));
                     jsonObject = MessageUtil.sendPost(url,jsonObject);
                     logger.info("订单详情：" + jsonObject);
-                    //未完待续：至此已经获得这笔订单的产品信息，根据产品信息到数据库选择不同面值的卡密，然后进行分发
-                    respContent = "卡号：123456\n密码：123456";
-                    //这个类型的推送貌似不能直接回去，需要自己调用api给用户发送消息
+
+                    // TODO 未完待续：至此已经获得这笔订单的产品信息，根据产品信息到数据库选择不同面值的卡密，然后进行分发
+                    respContent = "卡号：123456\\n密码：123456";
+
+                    //调用客服接口给用户发送卡密
+                    url = TokenUtil.getInstance().addToken(Urls.sendCustomeMsg);
+                    jsonObject = new JSONObject(String.format(Jsons.customeTextMsg, fromUserName, respContent));
+                    MessageUtil.sendPost(url,jsonObject);
                 }
             }
-            // 设置文本消息的内容
-            textMessage.setContent(respContent);
-            // 将文本消息对象转换成xml
-            respXml = MessageUtil.textMessageToXml(textMessage);
-            logger.info("回复的XML消息：" + respXml);
-            PrintWriter out = response.getWriter();
-            out.print(respXml);
-            out.close();
+//            // 设置文本消息的内容
+//            textMessage.setContent(respContent);
+//            // 将文本消息对象转换成xml
+//            respXml = MessageUtil.textMessageToXml(textMessage);
+//            logger.info("回复的XML消息：" + respXml);
+//            PrintWriter out = response.getWriter();
+//            out.print(respXml);aaaaa
+//            out.close();
         }catch (Exception e){
             logger.error(e.getMessage());
         }

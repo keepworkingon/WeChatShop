@@ -1,6 +1,6 @@
 package com.bfl.kernel.tools;
 
-import com.bfl.kernel.entity.Urls;
+import com.bfl.kernel.data.Urls;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,6 +10,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +20,8 @@ import org.springframework.scheduling.annotation.Scheduled;
  * Created by shidd on 2016/3/21.
  */
 public class TokenUtil {
+    private static Logger logger = LoggerFactory.getLogger(TokenUtil.class);
+
     private static final String appid = "wxa80eebcf2e021cdb";
 
     private static final String secret = "78c9ea33c4a34824e3cfbda97d31b620";
@@ -50,13 +54,14 @@ public class TokenUtil {
     }
 
     //定时任务
-    @Scheduled(cron="* * 0/2 * * *")
+    @Scheduled(cron="0 0 0/2 * * *")
     private void timerTask(){
         getTokenFromHttp();
     }
 
     //访问url获得token
     private void getTokenFromHttp(){
+        logger.info("获取token");
         try {
             CloseableHttpClient httpclient = HttpClients.createDefault();
             HttpGet httpget = new HttpGet(Urls.getToken + "?grant_type=" + "client_credential" + "&appid=" + appid + "&secret=" + secret);
